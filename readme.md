@@ -1,11 +1,12 @@
 <h1 align="center">
-    <img width="120" height="120" src="public/pic/logo.svg" alt=""><br>
+    <img width="120" height="120" src="public/pic/logo.png" alt=""><br>
     auto-pixai
 </h1>
 
 <p align="center">
     <a href="https://github.com/Mr-Smilin/audo-pixai/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Mr-Smilin/audo-pixai?style=flat-square"></a>
     <a href="https://github.com/Mr-Smilin/audo-pixai"><img src="https://img.shields.io/github/stars/Mr-Smilin/audo-pixai?style=flat-square"></a>
+    <a href="https://hub.docker.com/r/smile0301/auto-pixai"><img src="https://img.shields.io/docker/v/smile0301/auto-pixai"></a>
 </p>
 
 自動領取 pixai.art 獎勵
