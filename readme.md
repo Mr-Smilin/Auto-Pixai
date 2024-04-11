@@ -47,13 +47,25 @@ docker inspect <container-name>
 
 <br>
 
-## 手動裝配
+## 本地運行
 
-如果不想使用 `docker hub`，可進行手動配置
+如不想使用 `Docker`，可進行本地運行：
+
+<br>
+
+運行環境 `node:18.17.0`
+
+`git clone https://github.com/Mr-Smilin/auto-pixai.git`
+
+開啟 app.js 編輯
 
 ```
-// build Docker Image
-docker build -t <image_name> .
-// build Docker Container
-docker run -e LOGINNAME=<你的帳號> -e PASSWORD=<你的密碼> --name <container-name> <image-name>
+// 在 undefind 處輸入帳號
+const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
+// 在 undefind 處輸入密碼
+const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
+// 改成 false
+const isDocker = true;
 ```
+
+執行 `npm start`
