@@ -18,7 +18,10 @@ docker pull smile0301/auto-pixai
 docker run -e LOGINNAME=<你的帳號> -e PASSWORD=<你的密碼> --name <container-name> smile0301/auto-pixai
 ```
 
-`container-name` 依喜好命名，標示處一致即可。
+`container-name` 依喜好命名，標示處一致即可。  
+
+Docker 設置開機啟動，Container 就會在開機時自動運行一次；  
+或是另外透過其他排程工具，下達手動操作指令。
 
 ### 手動操作
 
