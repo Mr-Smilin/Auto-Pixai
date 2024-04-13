@@ -5,6 +5,8 @@ const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
 const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
 // 如果需要在本地運行，請將這裡改成 false
 const isDocker = true;
+// 如果想要看到瀏覽器，請將 headless 設置為 false
+const headless = true;
 
 function delay(time) {
 	return new Promise(function (resolve) {
@@ -19,8 +21,7 @@ async function loginAndScrape(url, username, password, isDocker) {
 	}
 
 	let config = {
-		// 如果想要看到瀏覽器，可以將 headless 設置為 false
-		headless: true,
+		headless: headless,
 	};
 
 	if (isDocker) {
@@ -176,7 +177,6 @@ async function claimCredit(page) {
 	checkIsClaimed: while (true) {
 		try {
 			if (isClaimed) {
-				console.log("已領取過獎勵");
 				break;
 			}
 			const claimBtnText = await page.$eval(
@@ -205,6 +205,7 @@ async function claimCredit(page) {
 					}
 				}
 			} else {
+				console.log("已領取過獎勵");
 				isClaimed = true;
 				continue checkIsClaimed;
 			}
