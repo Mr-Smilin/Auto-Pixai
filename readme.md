@@ -18,7 +18,7 @@ docker pull smile0301/auto-pixai
 docker run -e LOGINNAME=<你的帳號> -e PASSWORD=<你的密碼> --name <container-name> smile0301/auto-pixai
 ```
 
-`container-name` 依喜好命名，標示處一致即可。  
+`container-name` 依喜好命名，標示處一致即可。
 
 Docker 設置開機啟動，Container 就會在開機時自動運行一次；  
 或是另外透過其他排程工具，下達手動操作指令。
@@ -58,7 +58,9 @@ docker inspect <container-name>
 
 運行環境 `node:18.17.0`
 
-`git clone https://github.com/Mr-Smilin/auto-pixai.git`
+執行 `git clone https://github.com/Mr-Smilin/auto-pixai.git`
+
+執行 `npm install`
 
 開啟 app.js 編輯
 
