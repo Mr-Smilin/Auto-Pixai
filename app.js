@@ -5,7 +5,8 @@ const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
 const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
 // 如果需要在本地運行，請將這裡改成 false
 const isDocker = true;
-// 如果想要看到瀏覽器，請將 headless 設置為 false
+// 如果需要背景執行，請將 headless 設置為 true
+// 不保證背景執行時能夠正常運行
 const headless = true;
 
 function delay(time) {
@@ -67,14 +68,16 @@ async function loginAndScrape(url, username, password, isDocker) {
 async function login(page, username, password) {
 	await page.type("#email-input", username);
 	await page.type("#password-input", password);
+	await delay(300);
+	await page.waitForSelector('button[type="submit"]');
 	await page.click('button[type="submit"]');
+	await delay(3000);
 }
 
 //#endregion
 
 //#region 點擊彈窗
 async function checkPopup(page) {
-	console.log("Checking for popup");
 	try {
 		// check for popup
 		await page.click('//*[@id="app"]/body/div[4]/div[3]/div/div[2]/div/button');
@@ -96,13 +99,16 @@ async function selectProfileButton(driver) {
 	while (true) {
 		try {
 			// 確認是否已登入
+			console.log("確認是否已登入");
 			const headerText = await driver.$eval(
 				"header > div:nth-of-type(2)",
 				(el) => el.innerText
 			);
 			if (headerText.includes("Sign Up") || headerText.includes("Log in")) {
+				console.log("未登入");
 				continue;
 			} else {
+				console.log("已登入");
 				throw new Error();
 			}
 		} catch {
@@ -110,16 +116,20 @@ async function selectProfileButton(driver) {
 			const isPopupClosed = await checkPopup(driver);
 			try {
 				// 檢查個人資料頭像並點擊
+				console.log("點擊圖片頭像");
 				await driver.$eval("header > img", (el) => el.click());
+				console.log("成功");
 				await delay(300);
 				break;
 			} catch {
 				try {
 					// 如果沒有頭像的話會是div
+					console.log("點擊文字頭像");
 					await driver.$eval("header > div", (el) => el.click());
+					console.log("成功");
 					await delay(300);
 					break;
-				} catch {
+				} catch (err) {
 					try {
 						// 檢查密碼錯誤
 						await driver.$eval(
