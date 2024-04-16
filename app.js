@@ -72,6 +72,9 @@ async function login(page, username, password) {
 	await page.waitForSelector('button[type="submit"]');
 	await page.click('button[type="submit"]');
 	await delay(3000);
+	try {
+		await page.$eval('button[type="submit"]', (button) => button.click());
+	} catch {}
 }
 
 //#endregion
@@ -95,12 +98,12 @@ async function checkPopup(page) {
 //#endregion
 
 //#region 點擊頁首圖標
-async function selectProfileButton(driver) {
+async function selectProfileButton(page) {
 	while (true) {
 		try {
 			// 確認是否已登入
 			console.log("確認是否已登入");
-			const headerText = await driver.$eval(
+			const headerText = await page.$eval(
 				"header > div:nth-of-type(2)",
 				(el) => el.innerText
 			);
@@ -113,11 +116,11 @@ async function selectProfileButton(driver) {
 			}
 		} catch {
 			await delay(300);
-			const isPopupClosed = await checkPopup(driver);
+			const isPopupClosed = await checkPopup(page);
 			try {
 				// 檢查個人資料頭像並點擊
 				console.log("點擊圖片頭像");
-				await driver.$eval("header > img", (el) => el.click());
+				await page.$eval("header > img", (el) => el.click());
 				console.log("成功");
 				await delay(300);
 				break;
@@ -125,21 +128,21 @@ async function selectProfileButton(driver) {
 				try {
 					// 如果沒有頭像的話會是div
 					console.log("點擊文字頭像");
-					await driver.$eval("header > div", (el) => el.click());
+					await page.$eval("header > div", (el) => el.click());
 					console.log("成功");
 					await delay(300);
 					break;
 				} catch (err) {
 					try {
 						// 檢查密碼錯誤
-						await driver.$eval(
+						await page.$eval(
 							'svg[data-testid="ReportProblemOutlinedIcon"]',
 							(el) => el
 						);
 						throw new Error(username, "登入失敗！");
 					} catch {
 						if (!isPopupClosed) {
-							await checkPopup(driver);
+							await checkPopup(page);
 						}
 					}
 				}
@@ -207,6 +210,8 @@ async function claimCredit(page) {
 						(el) => el.innerText
 					);
 
+					await delay(300);
+
 					// 確認是不是 "Claimed"
 					if (updatedClaimBtnText.toLowerCase() === "claimed") {
 						console.log("領取成功");
@@ -242,5 +247,5 @@ async function claimCredit(page) {
 //#endregion
 
 loginAndScrape(url, username, password, isDocker)
-	.then(() => console.log("領取成功"))
+	.then(() => console.log("領取完畢"))
 	.catch((error) => console.error("異常：", error));
