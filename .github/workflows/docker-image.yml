@@ -12,12 +12,11 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - run: |
+      - name: Show tags
+        run: |
           git fetch --tags
           latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo "💡 Latest tag: $latest_tag"
-      - name: Checkout
-        uses: actions/checkout@v4
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
@@ -27,7 +26,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
+      - name: Build and push tag
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: smile0301/auto-pixai:$latest_tag
+      - name: Build and push latest
         uses: docker/build-push-action@v5
         with:
           context: .
