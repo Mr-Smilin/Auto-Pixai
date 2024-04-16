@@ -6,7 +6,7 @@
 <p align="center">
     <a href="https://github.com/Mr-Smilin/auto-pixai/blob/main/LICENSE"><img src="https://img.shields.io/github/license/Mr-Smilin/auto-pixai?style=flat-square"></a>
     <a href="https://github.com/Mr-Smilin/auto-pixai"><img src="https://img.shields.io/github/stars/Mr-Smilin/auto-pixai?style=flat-square"></a>
-    <a href="https://hub.docker.com/r/smile0301/auto-pixai"><img src="https://img.shields.io/docker/v/smile0301/auto-pixai"></a>
+    <a href="https://hub.docker.com/r/smile0301/auto-pixai"><img src="https://img.shields.io/github/v/release/Mr-Smilin/auto-pixai?style=flat-square&label=version&color=orange"></a>
 </p>
 
 自動領取 pixai.art 獎勵
