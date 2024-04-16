@@ -12,7 +12,10 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: |
+          git fetch --tags
+          latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+          echo "💡 Latest tag: $latest_tag"
       - name: Checkout
         uses: actions/checkout@v4
       - name: Set up QEMU
