@@ -48,16 +48,12 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: show value
-        env:
-          latest_tag: ${{ needs.tag.outputs.latest_tag }}
+      - name: check value
         run: |
           echo "need_create "${{ needs.tag.outputs.need_create }}
-          echo "latest_tag1 " ${{ needs.tag.outputs.latest_tag }}
-          echo "latest_tag2 $latest_tag"
-          echo "latest_tag3 " $latest_tag
+          echo "latest_tag1 "${{ needs.tag.outputs.latest_tag }}
       - name: push tag
-        if: ${{ needs.tag.outputs.need_create }}
+        if: ${{ needs.tag.outputs.need_create == 'true' }}
         env:
           latest_tag: ${{ needs.tag.outputs.latest_tag }}
         run: |
