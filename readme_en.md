@@ -9,66 +9,62 @@
     <a href="https://hub.docker.com/r/smile0301/auto-pixai"><img src="https://img.shields.io/github/v/release/Mr-Smilin/auto-pixai?style=flat-square&label=version&color=orange"></a>
 </p>
 
-自動領取 pixai.art 獎勵  
-[Click here for the English readme.](./readme_en.md)
+Automatically claim daily rewards on pixai.art  
+[中文自述在這裡](./readme.md)
 
-## 如何開始
+## Getting Started
 
-```
+```bash
 docker pull smile0301/auto-pixai
-docker run -e LOGINNAME=<你的帳號> -e PASSWORD=<你的密碼> --name <container-name> smile0301/auto-pixai
+docker run -e LOGINNAME=<your-username> -e PASSWORD=<your-password> --name <container-name> smile0301/auto-pixai
 ```
 
-`container-name` 依喜好命名，標示處一致即可。
+Replace `<container-name>` with a name of your choice to consistently identify the container.
 
-### 手動操作
+### Manual Operations
 
-```
-// 手動啟動容器
+```bash
+# Start the container manually
 docker start <container-name>
-// 手動關閉容器
+# Stop the container manually
 docker stop <container-name>
-// 查看容器狀態
+# Check container status
 docker inspect <container-name>
 ```
 
-<br>
+## About Username and Password
 
-## 關於帳號跟密碼
+If you are using third-party login and do not have a username and password:
 
-如果是第三方登入，沒有帳號跟密碼
-
-請訪問 [個人頁面](https://pixai.art/profile/edit)
-
-### https://pixai.art/profile/edit
+Please visit [Your Profile Page](https://pixai.art/profile/edit)
 
 ![account](https://i.imgur.com/tjfOabI.png)
 
-可以在此處設定帳號跟密碼，帳號的修改需要收取驗證信。
+You can set up your username and password here. Modifying your username requires a verification email.
 
-<br>
+## Running Locally
 
-## 本地運行
+If you prefer not to use `Docker`, you can run it locally:
 
-如不想使用 `Docker`，可進行本地運行：
+Required environment `node:18.17.0`
 
-<br>
+Execute:
 
-運行環境 `node:18.17.0`
-
-執行 `git clone https://github.com/Mr-Smilin/auto-pixai.git`
-
-執行 `npm install`
-
-開啟 app.js 編輯
-
+```bash
+git clone https://github.com/Mr-Smilin/auto-pixai.git
+npm install
 ```
-// 在 undefind 處輸入帳號
+
+Edit `app.js`:
+
+```bash
 const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
-// 在 undefind 處輸入密碼
 const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
-// 改成 false
 const isDocker = true;
 ```
 
-執行 `npm start`
+Execute:
+
+```bash
+npm start
+```
