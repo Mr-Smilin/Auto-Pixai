@@ -42,6 +42,7 @@ jobs:
   create-tag:
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       pull-requests: write
     needs: [tag]
     steps:
