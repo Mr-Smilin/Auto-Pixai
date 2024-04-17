@@ -43,7 +43,7 @@ jobs:
 
             # 创建新标签并推送到 GitHub
             git tag -a "$package_version" -m "Release $package_version"
-            git push origin "$package_version"
+            git push origin "$package_version" --quiet --follow-tags
 
             # 创建 GitHub 发布
             hub release create -m "Release $package_version" "$package_version"
