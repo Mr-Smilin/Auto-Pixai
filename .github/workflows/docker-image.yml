@@ -4,7 +4,7 @@ on:
   push:
     branches: ["release", "main"]
   pull_request:
-    branches: ["release"]
+    branches: ["main"]
 
 jobs:
   tag:
@@ -42,7 +42,6 @@ jobs:
   create-tag:
     runs-on: ubuntu-latest
     permissions:
-      # contents: write
       pull-requests: write
     needs: [tag]
     steps:
@@ -81,8 +80,6 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and push tag
-        # env:
-        #   TAG: ${{needs.tag.outputs.latest_tag}}
         uses: docker/build-push-action@v5
         with:
           context: .
