@@ -49,7 +49,7 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: push tag
-        if: ${{ needs.tag.outputs.need_create == 'true' }}
+        if: ${{ needs.tag.outputs.need_create == true }}
         run: |
           # 設置身份
           git config user.email "lion31lion31@gmail.com"
