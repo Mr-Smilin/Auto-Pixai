@@ -38,6 +38,9 @@ jobs:
             git config user.email "lion31lion31@gmail.com"
             git config user.name "Github Actions"
 
+            # 使用 Personal Access Token 进行身份验证
+            git config credential.helper store
+
             # 创建新标签并推送到 GitHub
             git tag -a "$package_version" -m "Release $package_version"
             git push origin "$package_version"
