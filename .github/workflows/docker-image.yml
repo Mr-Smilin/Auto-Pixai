@@ -31,10 +31,17 @@ jobs:
           latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
 
           # 比较版本号是否相等
-          if [ "$package_version" == "$latest_tag" ]; then
-            echo "✅ Package.json version matches latest tag: $package_version"
-          else
+          if [ "$package_version" != "$latest_tag" ]; then
             echo "❌ Package.json version does not match latest tag"
+            
+            # 创建新标签并推送到 GitHub
+            git tag -a "$package_version" -m "Release $package_version"
+            git push origin "$package_version"
+
+            # 创建 GitHub 发布
+            hub release create -m "Release $package_version" "$package_version"
+          else
+            echo "✅ Package.json version matches latest tag: $package_version"
           fi
   docker-build:
     if: github.ref == 'refs/heads/release'
