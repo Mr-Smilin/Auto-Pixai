@@ -49,7 +49,7 @@ jobs:
             git push origin "$package_version"
 
             # 创建 GitHub 发布
-            git release create -m "Release $package_version" "$package_version"
+            git push --follow-tags
           else
             echo "✅ Package.json version matches latest tag: $package_version"
           fi
