@@ -12,11 +12,12 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
-      - name: Show tags
+      - id: lastest_tag
+        name: Show tags
         run: |
           git fetch --tags
           latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-          echo "tag=$latest_tag" >> $GITHUB_OUTPUT
+          echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
           echo "💡 Latest tag: $latest_tag"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
