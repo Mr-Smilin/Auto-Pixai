@@ -21,6 +21,21 @@ jobs:
           latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
           echo "💡 Latest tag: $latest_tag"
+      - name: check tag
+        run: |
+          # 获取 package.json 中的版本号
+          package_version=$(node -e "console.log(require('./package.json').version)")
+          # 获取 GitHub 上的最新标签号
+
+          git fetch --tags
+          latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+
+          # 比较版本号是否相等
+          if [ "$package_version" == "$latest_tag" ]; then
+            echo "✅ Package.json version matches latest tag: $package_version"
+          else
+            echo "❌ Package.json version does not match latest tag"
+          fi
   docker-build:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
