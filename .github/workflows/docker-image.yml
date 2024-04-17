@@ -18,6 +18,7 @@ jobs:
           latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
           echo "::set-output name=tag::$latest_tag"
           echo "💡 Latest tag: $latest_tag"
+          echo "👉 The Username is ${{ env.DOCKERHUB_USERNAME }}"
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       - name: Set up Docker Buildx
