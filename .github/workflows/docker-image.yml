@@ -27,12 +27,12 @@ jobs:
 
           # 比較版本號碼是否相等
           if [ "$package_version" != "$github_tag" ]; then
-            need_create="true"
+            need_create=true
             latest_tag=$package_version
 
             echo "❌ Package.json version does not match github tag"
           else
-            need_create="false"
+            need_create=false
             latest_tag=$github_tag
             echo "✅ Package.json version matches github tag: $latest_tag"
           fi
@@ -40,16 +40,17 @@ jobs:
           echo "💡 Latest tag: $latest_tag"
           echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
   create-tag:
-    if: ${{ needs.tag.outputs.need_create == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
       pull-requests: write
     needs: [tag]
     steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
       - name: push tag
+        if: ${{ needs.tag.outputs.need_create == 'true' }}
         run: |
-
           # 設置身份
           git config user.email "lion31lion31@gmail.com"
           git config user.name "Github Actions"
