@@ -9,54 +9,57 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
     outputs:
       latest_tag: ${{ steps.latest_tag.outputs.tag }}
+      need_create: ${{ steps.latest_tag.outputs.need_create }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
       - name: Show tags
         id: latest_tag
         run: |
-          git fetch --tags
-          latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
-          echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
-          echo "💡 Latest tag: $latest_tag"
-      - name: check tag
-        run: |
-          # 获取 package.json 中的版本号
+          # 取得 package.json 中的版本號
           package_version=$(node -e "console.log(require('./package.json').version)")
-          # 获取 GitHub 上的最新标签号
 
+          # 取得 GitHub 上的最新標籤號
           git fetch --tags
-          latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
+          github_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
 
-          # 比较版本号是否相等
-          if [ "$package_version" != "$latest_tag" ]; then
-            echo "❌ Package.json version does not match latest tag"
-            
-            # 設置身份
-            git config user.email "lion31lion31@gmail.com"
-            git config user.name "Github Actions"
+          # 比較版本號碼是否相等
+          if [ "$package_version" != "$github_tag" ]; then
+            need_create=true
+            latest_tag=$package_version
 
-            # 使用 Personal Access Token 进行身份验证
-            git config credential.helper store
-
-            # 创建新标签并推送到 GitHub
-            git tag -a "$package_version" -m "Release $package_version"
-            git push origin "$package_version"
-
-            # 创建 GitHub 发布
-            git push --follow-tags
+            echo "❌ Package.json version does not match github tag"
           else
-            echo "✅ Package.json version matches latest tag: $package_version"
+            need_create=false
+            latest_tag=$github_tag
+            echo "✅ Package.json version matches github tag: $latest_tag"
           fi
+
+          echo "💡 Latest tag: $latest_tag"
+          echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
+  create-tag:
+    if: ${{ needs.tag.outputs.need_create == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    needs: [tag]
+    steps:
+      - name: push tag
+        run: |
+          # 設置身份
+          git config user.email "lion31lion31@gmail.com"
+          git config user.name "Github Actions"
+
+          # 建立新標籤並推送到 GitHub
+          git tag -a "$latest_tag" -m "Release $latest_tag"
+          git push origin "$latest_tag"
   docker-build:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
-    needs: [tag]
+    needs: [tag, create-tag]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
