@@ -40,7 +40,7 @@ jobs:
           echo "💡 Latest tag: $latest_tag"
           echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
   create-tag:
-    if: ${{ needs.tag.outputs.need_create == 'true' }}
+    if: ${{ needs.tag.outputs.need_create }}
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -49,6 +49,7 @@ jobs:
     steps:
       - name: push tag
         run: |
+
           # 設置身份
           git config user.email "lion31lion31@gmail.com"
           git config user.name "Github Actions"
