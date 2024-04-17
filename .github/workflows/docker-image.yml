@@ -19,7 +19,7 @@ jobs:
           echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
           echo "💡 Latest tag: $latest_tag"
       - name: test
-        run: echo "test ${{ steps.latest_tag.outputs.tag }}"
+        run: echo "test ${{ steps.outputs.tag }}"
       # - name: Set up QEMU
       #   uses: docker/setup-qemu-action@v3
       # - name: Set up Docker Buildx
