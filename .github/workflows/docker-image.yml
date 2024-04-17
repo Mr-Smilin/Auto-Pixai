@@ -9,6 +9,9 @@ on:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     outputs:
       latest_tag: ${{ steps.latest_tag.outputs.tag }}
     steps:
@@ -43,15 +46,13 @@ jobs:
 
             # 创建新标签并推送到 GitHub
             git tag -a "$package_version" -m "Release $package_version"
-            git push origin "$package_version" --quiet --follow-tags
+            git push origin "$package_version"
 
             # 创建 GitHub 发布
             hub release create -m "Release $package_version" "$package_version"
           else
             echo "✅ Package.json version matches latest tag: $package_version"
           fi
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
   docker-build:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
