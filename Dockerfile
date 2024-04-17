@@ -7,5 +7,5 @@ RUN apt-get update && apt-get install curl gnupg -y \
     && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY package.json package-lock.json app.js ./
-COPY node_modules ./node_modules/
+RUN npm install
 CMD ["npm", "start"]
