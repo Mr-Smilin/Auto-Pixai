@@ -49,13 +49,13 @@ jobs:
     needs: tag
     steps:
       - name: Build and push tag
-        env:
-          TAG: ${{needs.tag.outputs.latest_tag}}
+        # env:
+        #   TAG: ${{needs.tag.outputs.latest_tag}}
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: smile0301/auto-pixai:$TAG
+          tags: smile0301/auto-pixai:${{needs.tag.outputs.latest_tag}}
       - name: Build and push latest
         uses: docker/build-push-action@v5
         with:
