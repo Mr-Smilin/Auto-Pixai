@@ -51,7 +51,7 @@ jobs:
             echo "✅ Package.json version matches latest tag: $package_version"
           fi
         env:
-          PAT_TOKEN: ${{ secrets.PAT_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
   docker-build:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
