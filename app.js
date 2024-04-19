@@ -18,7 +18,6 @@ function delay(time) {
 
 async function loginAndScrape(url, username, password, isDocker) {
 	console.log("帳號：", username);
-	showVersion();
 	if (username == undefined || password == undefined) {
 		throw new Error("請在環境變數設置帳號密碼");
 	}
@@ -64,25 +63,6 @@ async function loginAndScrape(url, username, password, isDocker) {
 
 	// 爬取完成後，關閉瀏覽器
 	await browser.close();
-}
-
-function showVersion() {
-	fs.readFile("package.json", "utf8", (err, data) => {
-		if (err) {
-			console.error("讀取 package.json 時出錯:", err);
-			return;
-		}
-
-		try {
-			// 解析 JSON 數據
-			const packageJson = JSON.parse(data);
-
-			// 獲取版本
-			console.log("當前版本：", packageJson.version);
-		} catch (error) {
-			console.error("解析 package.json 時出錯:", error);
-		}
-	});
 }
 
 //#region 登入
@@ -213,6 +193,8 @@ async function claimCredit(page) {
 	await page.waitForSelector(
 		"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
 	);
+	// 太快進入，緩存會顯示為 claimed
+	await delay(2000);
 	let isClaimed = false;
 	checkIsClaimed: while (true) {
 		try {
