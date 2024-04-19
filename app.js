@@ -17,8 +17,8 @@ function delay(time) {
 }
 
 async function loginAndScrape(url, username, password, isDocker) {
-	console.log("當前版本：", getVersion());
 	console.log("帳號：", username);
+	showVersion();
 	if (username == undefined || password == undefined) {
 		throw new Error("請在環境變數設置帳號密碼");
 	}
@@ -66,7 +66,7 @@ async function loginAndScrape(url, username, password, isDocker) {
 	await browser.close();
 }
 
-function getVersion() {
+function showVersion() {
 	fs.readFile("package.json", "utf8", (err, data) => {
 		if (err) {
 			console.error("讀取 package.json 時出錯:", err);
@@ -78,7 +78,7 @@ function getVersion() {
 			const packageJson = JSON.parse(data);
 
 			// 獲取版本
-			return packageJson.version;
+			console.log("當前版本：", packageJson.version);
 		} catch (error) {
 			console.error("解析 package.json 時出錯:", error);
 		}
