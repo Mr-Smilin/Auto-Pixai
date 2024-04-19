@@ -2,10 +2,12 @@ const fs = require("fs");
 const puppeteer = require("puppeteer");
 const url = "https://pixai.art/login";
 // 因為 window 的 USERNAME 撞名
-const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
-const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
+const username = process.env.LOGINNAME
+	? process.env.LOGINNAME
+	: "lion31lion31@gmail.com";
+const password = process.env.PASSWORD ? process.env.PASSWORD : "yoyo123";
 // 如果需要在本地運行，請將這裡改成 false
-const isDocker = true;
+const isDocker = false;
 // 如果需要背景執行，請將 headless 設置為 true
 // 不保證背景執行時能夠正常運行
 const headless = true;
@@ -17,8 +19,8 @@ function delay(time) {
 }
 
 async function loginAndScrape(url, username, password, isDocker) {
-	console.log("當前版本：", getVersion());
 	console.log("帳號：", username);
+	showVersion();
 	if (username == undefined || password == undefined) {
 		throw new Error("請在環境變數設置帳號密碼");
 	}
@@ -66,7 +68,7 @@ async function loginAndScrape(url, username, password, isDocker) {
 	await browser.close();
 }
 
-function getVersion() {
+function showVersion() {
 	fs.readFile("package.json", "utf8", (err, data) => {
 		if (err) {
 			console.error("讀取 package.json 時出錯:", err);
@@ -78,7 +80,7 @@ function getVersion() {
 			const packageJson = JSON.parse(data);
 
 			// 獲取版本
-			return packageJson.version;
+			console.log("當前版本：", packageJson.version);
 		} catch (error) {
 			console.error("解析 package.json 時出錯:", error);
 		}
