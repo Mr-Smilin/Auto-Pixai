@@ -208,9 +208,7 @@ async function claimCredit(page) {
 			if (claimBtnText.toLowerCase() !== "claimed") {
 				miniClaimLoop: while (true) {
 					// 領取！
-					await page.click(
-						"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
-					);
+					await claimCredit();
 					await delay(300);
 					await page.reload();
 					await delay(300);
@@ -244,6 +242,14 @@ async function claimCredit(page) {
 			}
 		}
 	}
+}
+
+async function claimCredit() {
+	try {
+		await page.click(
+			"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
+		);
+	} catch {}
 }
 //#endregion
 
