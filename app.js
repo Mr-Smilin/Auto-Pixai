@@ -237,18 +237,10 @@ async function claimCredit(page) {
 			if (!(await checkPopup(page))) {
 				await delay(500);
 				if (!isClaimed) {
-					await page.click(
-						"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
-					);
 					continue checkIsClaimed;
 				} else {
 					break;
 				}
-			} else {
-				throw new Error(
-					"不知道出啥狀況了，希望能請您蒐集詳細情報並至 GitHub 回報"
-				);
-				break;
 			}
 		}
 	}
