@@ -237,9 +237,11 @@ async function claimCredit(page) {
 				if (!isClaimed) {
 					continue checkIsClaimed;
 				} else {
+					console.log("已領取獎勵");
 					break;
 				}
 			}
+			continue checkIsClaimed;
 		}
 	}
 }
