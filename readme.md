@@ -66,11 +66,11 @@ npm install
 開啟 app.js 編輯
 
 ```bash
-// 在 undefind 處輸入帳號
+# 在 undefind 處輸入帳號
 const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
-// 在 undefind 處輸入密碼
+# 在 undefind 處輸入密碼
 const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
-// 改成 false
+# 改成 false
 const isDocker = true;
 ```
 

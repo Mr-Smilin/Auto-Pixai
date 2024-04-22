@@ -58,9 +58,9 @@ npm install
 Edit `app.js`:
 
 ```bash
-const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
-const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
-const isDocker = true;
+const username = <your-username>;
+const password = <your-password>;
+const isDocker = false;
 ```
 
 Execute:
