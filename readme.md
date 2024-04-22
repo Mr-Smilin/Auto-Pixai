@@ -14,7 +14,7 @@
 
 ## 如何開始
 
-```
+```bash
 docker pull smile0301/auto-pixai
 docker run -e LOGINNAME=<你的帳號> -e PASSWORD=<你的密碼> --name <container-name> smile0301/auto-pixai
 ```
@@ -23,12 +23,12 @@ docker run -e LOGINNAME=<你的帳號> -e PASSWORD=<你的密碼> --name <contai
 
 ### 手動操作
 
-```
-// 手動啟動容器
+```bash
+# 手動啟動容器
 docker start <container-name>
-// 手動關閉容器
+# 手動關閉容器
 docker stop <container-name>
-// 查看容器狀態
+# 查看容器狀態
 docker inspect <container-name>
 ```
 
@@ -56,13 +56,16 @@ docker inspect <container-name>
 
 運行環境 `node:18.17.0`
 
-執行 `git clone https://github.com/Mr-Smilin/auto-pixai.git`
+執行
 
-執行 `npm install`
+```bash
+git clone https://github.com/Mr-Smilin/auto-pixai.git
+npm install
+```
 
 開啟 app.js 編輯
 
-```
+```bash
 // 在 undefind 處輸入帳號
 const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
 // 在 undefind 處輸入密碼
@@ -71,4 +74,8 @@ const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
 const isDocker = true;
 ```
 
-執行 `npm start`
+執行
+
+```bash
+npm start
+```
