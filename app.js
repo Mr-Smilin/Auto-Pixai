@@ -2,13 +2,14 @@ const fs = require("fs");
 const puppeteer = require("puppeteer");
 const url = "https://pixai.art/login";
 // 因為 window 的 USERNAME 撞名
-const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
-const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
+const username = process.env.LOGINNAME
+	? process.env.LOGINNAME
+	: "lion31lion31@gmail.com";
+const password = process.env.PASSWORD ? process.env.PASSWORD : "yoyo123";
 // 如果需要在本地運行，請將這裡改成 false
-const isDocker = true;
+const isDocker = false;
 // 如果需要背景執行，請將 headless 設置為 true
-// 不保證背景執行時能夠正常運行
-const headless = true;
+const headless = false;
 
 function delay(time) {
 	return new Promise(function (resolve) {
@@ -190,13 +191,16 @@ async function clickProfile(page) {
 
 //#region 點擊每日獎勵
 async function claimCredit(page) {
+	console.log("1");
 	await page.waitForSelector(
 		"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
 	);
 	// 太快進入，緩存會顯示為 claimed
 	await delay(2000);
+	console.log("2");
 	let isClaimed = false;
 	checkIsClaimed: while (true) {
+		console.log("3");
 		try {
 			if (isClaimed) {
 				break;
@@ -208,7 +212,7 @@ async function claimCredit(page) {
 			if (claimBtnText.toLowerCase() !== "claimed") {
 				miniClaimLoop: while (true) {
 					// 領取！
-					await claimCredit();
+					await clickCredit(page);
 					await delay(300);
 					await page.reload();
 					await delay(300);
@@ -246,7 +250,7 @@ async function claimCredit(page) {
 	}
 }
 
-async function claimCredit() {
+async function clickCredit(page) {
 	try {
 		await page.click(
 			"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
