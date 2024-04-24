@@ -7,7 +7,6 @@ const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
 // 如果需要在本地運行，請將這裡改成 false
 const isDocker = true;
 // 如果需要背景執行，請將 headless 設置為 true
-// 不保證背景執行時能夠正常運行
 const headless = true;
 
 function delay(time) {
@@ -208,7 +207,7 @@ async function claimCredit(page) {
 			if (claimBtnText.toLowerCase() !== "claimed") {
 				miniClaimLoop: while (true) {
 					// 領取！
-					await claimCredit();
+					await clickCredit(page);
 					await delay(300);
 					await page.reload();
 					await delay(300);
@@ -246,7 +245,7 @@ async function claimCredit(page) {
 	}
 }
 
-async function claimCredit() {
+async function clickCredit(page) {
 	try {
 		await page.click(
 			"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
