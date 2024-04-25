@@ -200,35 +200,25 @@ async function claimCredit(page) {
 			if (isClaimed) {
 				break;
 			}
-			const claimBtnText = await page.$eval(
-				"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span",
-				(el) => el.innerText
-			);
-			if (claimBtnText.toLowerCase() !== "claimed") {
-				miniClaimLoop: while (true) {
-					// 領取！
-					await clickCredit(page);
-					await delay(300);
-					await page.reload();
-					await delay(300);
-					const updatedClaimBtnText = await page.$eval(
-						"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span",
-						(el) => el.innerText
-					);
+			while (true) {
+				// 領取！
+				await clickCredit(page);
+				await delay(300);
+				await page.reload();
+				await delay(300);
+				const updatedClaimBtnText = await page.$eval(
+					"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span",
+					(el) => el.innerText
+				);
 
-					await delay(300);
+				await delay(300);
 
-					// 確認是不是 "Claimed"
-					if (updatedClaimBtnText.toLowerCase() === "claimed") {
-						console.log("領取成功");
-						isClaimed = true;
-						continue checkIsClaimed;
-					}
+				// 確認是不是 "Claimed"
+				if (updatedClaimBtnText.toLowerCase() === "claimed") {
+					console.log("領取成功");
+					isClaimed = true;
+					continue checkIsClaimed;
 				}
-			} else {
-				console.log("已領取過獎勵");
-				isClaimed = true;
-				continue checkIsClaimed;
 			}
 		} catch {
 			if (!(await checkPopup(page))) {
