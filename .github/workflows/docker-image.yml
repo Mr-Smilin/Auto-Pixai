@@ -26,11 +26,18 @@ jobs:
             ${{ runner.os }}-node-
 
       - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
         name: List the state of node modules
         continue-on-error: true
         run: npm list
 
-      - name: Install dependencies
+      - if: ${{ steps.cache-npm.outputs.cache-hit != 'true' }}
+        name: Install dependencies
         run: npm install
 
       # 上傳存儲項目
@@ -110,6 +117,7 @@ jobs:
       #     name: node_modules
       #     path: node_modules
 
+      # 載入緩存
       - name: Cache node modules
         id: cache-node-modules
         uses: actions/cache@v3
