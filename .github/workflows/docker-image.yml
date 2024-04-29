@@ -28,6 +28,12 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install
 
+      - name: Copy node_modules to project directory (if not present)
+        run: |
+          if [ ! -d "node_modules" ]; then
+            cp -r node_modules ./
+          fi
+
   tag:
     runs-on: ubuntu-latest
     needs: setup-and-cache
