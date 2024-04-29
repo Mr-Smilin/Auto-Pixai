@@ -215,7 +215,9 @@ async function claimCredit(page) {
 				await page.click(
 					"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
 				);
-				await delay(2000);
+				await delay(300);
+				await page.reload();
+				await delay(5000);
 				const updatedClaimBtnText = await page.$eval(
 					"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span",
 					(el) => el.innerText
@@ -234,8 +236,6 @@ async function claimCredit(page) {
 			if (!(await checkPopup(page))) {
 				await delay(500);
 				if (!isClaimed) {
-					await page.reload();
-					await delay(2000);
 					continue checkIsClaimed;
 				} else {
 					console.log("已領取獎勵");
