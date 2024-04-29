@@ -1,4 +1,3 @@
-const fs = require("fs");
 const puppeteer = require("puppeteer");
 const url = "https://pixai.art/login";
 // 因為 window 的 USERNAME 撞名
@@ -15,7 +14,7 @@ function delay(time) {
 	});
 }
 
-async function loginAndScrape(url, username, password, isDocker) {
+async function loginAndScrape(url, username, password, isDocker, headless) {
 	console.log("帳號：", username);
 	if (username == undefined || password == undefined) {
 		throw new Error("請在環境變數設置帳號密碼");
@@ -249,6 +248,6 @@ async function claimCredit(page) {
 }
 //#endregion
 
-loginAndScrape(url, username, password, isDocker)
+loginAndScrape(url, username, password, isDocker, headless)
 	.then(() => console.log("領取完畢"))
 	.catch((error) => console.error("異常：", error));
