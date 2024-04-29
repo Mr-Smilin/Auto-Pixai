@@ -7,38 +7,56 @@ on:
     branches: ["main"]
 
 jobs:
+  setup-and-cache:
+    runs-on: ubuntu-latest
+    outputs:
+      cache-hit: ${{ steps.cache-node-modules.outputs.cache-hit }}
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Cache node modules
+        id: cache-node-modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install
+
   tag:
     runs-on: ubuntu-latest
+    needs: setup-and-cache
     outputs:
       latest_tag: ${{ steps.latest_tag.outputs.tag }}
       need_create: ${{ steps.latest_tag.outputs.need_create }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
       - name: Show tags
         id: latest_tag
         run: |
-          # 取得 package.json 中的版本號
           package_version=$(node -e "console.log(require('./package.json').version)")
-
-          # 取得 GitHub 上的最新標籤號
           git fetch --tags
           github_tag=$(git describe --tags $(git rev-list --tags --max-count=1))
 
-          # 比較版本號碼是否相等
           if [ "$package_version" != "$github_tag" ]; then
             echo "need_create=true" >> "$GITHUB_OUTPUT"
             latest_tag=$package_version
-
             echo "❌ Package.json version does not match github tag"
           else
             echo "need_create=false" >> "$GITHUB_OUTPUT"
             latest_tag=$github_tag
             echo "✅ Package.json version matches github tag: $latest_tag"
           fi
-
           echo "💡 Latest tag: $latest_tag"
           echo "tag=$latest_tag" >> "$GITHUB_OUTPUT"
+
   create-tag:
     runs-on: ubuntu-latest
     permissions:
@@ -53,7 +71,7 @@ jobs:
           echo "need_create "${{ needs.tag.outputs.need_create }}
           echo "latest_tag1 "${{ needs.tag.outputs.latest_tag }}
       - name: push tag
-        if: ${{ needs.tag.outputs.need_create == 'true' }}
+        if: needs.tag.outputs.need_create == 'true'
         env:
           latest_tag: ${{ needs.tag.outputs.latest_tag }}
         run: |
@@ -64,6 +82,7 @@ jobs:
           # 建立新標籤並推送到 GitHub
           git tag -a "$latest_tag" -m "Release $latest_tag"
           git push origin "$latest_tag"
+
   docker-build:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
@@ -71,21 +90,26 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
       - name: Build and push tag
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
-          tags: smile0301/auto-pixai:${{needs.tag.outputs.latest_tag}}
+          tags: smile0301/auto-pixai:${{ needs.tag.outputs.latest_tag }}
+
       - name: Build and push latest
         uses: docker/build-push-action@v5
         with:
