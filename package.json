@@ -1,6 +1,6 @@
 {
   "name": "auto-pixai",
-  "version": "0.15",
+  "version": "0.16",
   "description": "自動領取pixai.art獎勵",
   "main": "app.js",
   "scripts": {

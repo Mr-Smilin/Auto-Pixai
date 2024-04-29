@@ -106,11 +106,21 @@ async function selectProfileButton(page) {
 			try {
 				await page.click('button[type="submit"]');
 			} catch {}
-			const headerText = await page.$eval(
+			let headerText = await page.$eval(
 				"header > div:nth-of-type(2)",
 				(el) => el.innerText
 			);
-			if (headerText.includes("Sign Up") || headerText.includes("Log in")) {
+			// 適配 UI 版本
+			if (headerText == null)
+				headerText = await page.$eval(
+					"header > div:nth-of-type(1)",
+					(el) => el.innerText
+				);
+			if (
+				!headerText ||
+				headerText.includes("Sign Up") ||
+				headerText.includes("Log in")
+			) {
 				console.log("未登入");
 				continue;
 			} else {
