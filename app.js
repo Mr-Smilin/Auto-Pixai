@@ -210,7 +210,7 @@ async function claimCredit(page) {
 				);
 				await delay(300);
 				await page.reload();
-				await delay(300);
+				await delay(2000);
 				const updatedClaimBtnText = await page.$eval(
 					"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span",
 					(el) => el.innerText
