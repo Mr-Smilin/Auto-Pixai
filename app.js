@@ -202,7 +202,9 @@ async function claimCredit(page) {
 			}
 			while (true) {
 				// 領取！
-				await clickCredit(page);
+				await page.click(
+					"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
+				);
 				await delay(300);
 				await page.reload();
 				await delay(300);
@@ -233,14 +235,6 @@ async function claimCredit(page) {
 			continue checkIsClaimed;
 		}
 	}
-}
-
-async function clickCredit(page) {
-	try {
-		await page.click(
-			"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
-		);
-	} catch {}
 }
 //#endregion
 
