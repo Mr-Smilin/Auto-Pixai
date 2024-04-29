@@ -9,8 +9,6 @@ on:
 jobs:
   setup-and-cache:
     runs-on: ubuntu-latest
-    outputs:
-      cache-hit: ${{ steps.cache-node-modules.outputs.cache-hit }}
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
@@ -28,11 +26,11 @@ jobs:
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install
 
-      - name: Copy node_modules to project directory (if not present)
-        run: |
-          if [ ! -d "node_modules" ]; then
-            cp -r node_modules ./
-          fi
+      - name: Upload node_modules
+        uses: actions/upload-artifact@v3
+        with:
+          name: node_modules
+          path: node_modules
 
   tag:
     runs-on: ubuntu-latest
@@ -96,6 +94,12 @@ jobs:
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
+
+      - name: Download node_modules
+        uses: actions/download-artifact@v3
+        with:
+          name: node_modules
+          path: node_modules
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
