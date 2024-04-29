@@ -103,6 +103,9 @@ async function selectProfileButton(page) {
 		try {
 			// 確認是否已登入
 			console.log("確認是否已登入");
+			try {
+				await page.click('button[type="submit"]');
+			} catch {}
 			const headerText = await page.$eval(
 				"header > div:nth-of-type(2)",
 				(el) => el.innerText
