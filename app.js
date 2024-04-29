@@ -195,8 +195,6 @@ async function claimCredit(page) {
 	await page.waitForSelector(
 		"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
 	);
-	// 太快進入，緩存會顯示為 claimed
-	await delay(2000);
 	let isClaimed = false;
 	checkIsClaimed: while (true) {
 		try {
@@ -208,8 +206,6 @@ async function claimCredit(page) {
 				await page.click(
 					"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button"
 				);
-				await delay(300);
-				await page.reload();
 				await delay(2000);
 				const updatedClaimBtnText = await page.$eval(
 					"section > div > div:nth-of-type(2) > div:nth-of-type(2) > button > span",
@@ -229,6 +225,8 @@ async function claimCredit(page) {
 			if (!(await checkPopup(page))) {
 				await delay(500);
 				if (!isClaimed) {
+					await page.reload();
+					await delay(2000);
 					continue checkIsClaimed;
 				} else {
 					console.log("已領取獎勵");
