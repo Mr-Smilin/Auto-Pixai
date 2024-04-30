@@ -2,12 +2,12 @@ name: Docker Image CI
 
 on:
   push:
-    branches: ["release", "main"]
-  pull_request:
-    branches: ["main"]
+    branches: ["release"]
+  # pull_request:
+  #   branches: ["main"]
 
 jobs:
-  setup-and-cache:
+  cache-node-modules:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
     steps:
@@ -110,7 +110,7 @@ jobs:
   docker-build:
     if: github.ref == 'refs/heads/release'
     runs-on: ubuntu-latest
-    needs: [setup-and-cache, check-tag, create-tag]
+    needs: [cache-node-modules, check-tag, create-tag]
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
