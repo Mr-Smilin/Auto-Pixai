@@ -7,6 +7,10 @@ const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
 const isDocker = true;
 // 如果需要背景執行，請將 headless 設置為 true
 const headless = true;
+// 重試次數上限
+const tryCountMax = 3;
+// 重試次數
+let tryCount = 0;
 
 function delay(time) {
 	return new Promise(function (resolve) {
@@ -41,23 +45,84 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 	const browser = await puppeteer.launch(config); //
 
 	const page = await browser.newPage();
-	await page.goto(url);
+
+	try {
+		await page.goto(url);
+	} catch (error) {
+		console.error("訪問 URL 失敗:", error);
+		tryCount++;
+		if (tryCount <= tryCountMax) {
+			return loginAndScrape(url, username, password, isDocker, headless);
+		} else {
+			throw new Error("重試訪問 URL 失敗");
+		}
+	}
 
 	// 點擊取消初始畫面
-	await page.waitForSelector('div[id="root"] > div > div > button');
-	await page.click('div[id="root"] > div > div > button');
+	try {
+		await page.waitForSelector('div[id="root"] > div > div > button');
+		await page.click('div[id="root"] > div > div > button');
+	} catch (error) {
+		console.error("點擊取消初始畫面失敗:", error);
+		tryCount++;
+		if (tryCount <= tryCountMax) {
+			return loginAndScrape(url, username, password, isDocker, headless);
+		} else {
+			throw new Error("重試點擊取消初始畫面失敗");
+		}
+	}
 
-	console.log("登入");
-	await login(page, username, password);
+	try {
+		console.log("登入");
+		await login(page, username, password);
+	} catch (error) {
+		console.error("登入失敗:", error);
+		tryCount++;
+		if (tryCount <= tryCountMax) {
+			return loginAndScrape(url, username, password, isDocker, headless);
+		} else {
+			throw new Error("重試登入失敗");
+		}
+	}
 
-	console.log("展開使用者列表");
-	await selectProfileButton(page);
+	try {
+		console.log("展開使用者列表");
+		await selectProfileButton(page);
+	} catch (error) {
+		console.error("展開使用者列表失敗:", error);
+		tryCount++;
+		if (tryCount <= tryCountMax) {
+			return loginAndScrape(url, username, password, isDocker, headless);
+		} else {
+			throw new Error("重試展開使用者列表失敗");
+		}
+	}
 
-	console.log("點擊檔案列表");
-	await clickProfile(page);
+	try {
+		console.log("點擊檔案列表");
+		await clickProfile(page);
+	} catch (error) {
+		console.error("點擊檔案列表失敗:", error);
+		tryCount++;
+		if (tryCount <= tryCountMax) {
+			return loginAndScrape(url, username, password, isDocker, headless);
+		} else {
+			throw new Error("重試點擊檔案列表失敗");
+		}
+	}
 
-	console.log("領取每日獎勵");
-	await claimCredit(page);
+	try {
+		console.log("領取每日獎勵");
+		await claimCredit(page);
+	} catch (error) {
+		console.error("領取每日獎勵失敗:", error);
+		tryCount++;
+		if (tryCount <= tryCountMax) {
+			return loginAndScrape(url, username, password, isDocker, headless);
+		} else {
+			throw new Error("重試領取每日獎勵失敗");
+		}
+	}
 
 	// 爬取完成後，關閉瀏覽器
 	await browser.close();
