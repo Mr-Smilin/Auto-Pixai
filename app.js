@@ -52,7 +52,7 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 		console.error("訪問 URL 失敗:", error);
 		tryCount++;
 		if (tryCount <= tryCountMax) {
-			return loginAndScrape(url, username, password, isDocker, headless);
+			return await loginAndScrape(url, username, password, isDocker, headless);
 		} else {
 			throw new Error("重試訪問 URL 失敗");
 		}
@@ -60,13 +60,20 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 
 	// 點擊取消初始畫面
 	try {
-		await page.waitForSelector('div[id="root"] > div > div > button');
-		await page.click('div[id="root"] > div > div > button');
+		// 1.1.1 舊版畫面
+		// await page.waitForSelector('div[id="root"] > div > div > button');
+		// await page.click('div[id="root"] > div > div > button');
+		await page.waitForSelector(
+			'div[id="root"] > div > div > div > div > form > div > div button:last-of-type'
+		);
+		await page.click(
+			'div[id="root"] > div > div > div > div > form > div > div button:last-of-type'
+		);
 	} catch (error) {
 		console.error("點擊取消初始畫面失敗:", error);
 		tryCount++;
 		if (tryCount <= tryCountMax) {
-			return loginAndScrape(url, username, password, isDocker, headless);
+			return await loginAndScrape(url, username, password, isDocker, headless);
 		} else {
 			throw new Error("重試點擊取消初始畫面失敗");
 		}
@@ -79,7 +86,7 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 		console.error("登入失敗:", error);
 		tryCount++;
 		if (tryCount <= tryCountMax) {
-			return loginAndScrape(url, username, password, isDocker, headless);
+			return await loginAndScrape(url, username, password, isDocker, headless);
 		} else {
 			throw new Error("重試登入失敗");
 		}
@@ -92,7 +99,7 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 		console.error("展開使用者列表失敗:", error);
 		tryCount++;
 		if (tryCount <= tryCountMax) {
-			return loginAndScrape(url, username, password, isDocker, headless);
+			return await loginAndScrape(url, username, password, isDocker, headless);
 		} else {
 			throw new Error("重試展開使用者列表失敗");
 		}
@@ -105,7 +112,7 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 		console.error("點擊檔案列表失敗:", error);
 		tryCount++;
 		if (tryCount <= tryCountMax) {
-			return loginAndScrape(url, username, password, isDocker, headless);
+			return await loginAndScrape(url, username, password, isDocker, headless);
 		} else {
 			throw new Error("重試點擊檔案列表失敗");
 		}
@@ -118,7 +125,7 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 		console.error("領取每日獎勵失敗:", error);
 		tryCount++;
 		if (tryCount <= tryCountMax) {
-			return loginAndScrape(url, username, password, isDocker, headless);
+			return await loginAndScrape(url, username, password, isDocker, headless);
 		} else {
 			throw new Error("重試領取每日獎勵失敗");
 		}
@@ -291,7 +298,12 @@ async function claimCredit(page) {
 				await delay(300);
 
 				// 確認是不是 "Claimed"
-				if (updatedClaimBtnText.toLowerCase() === "claimed") {
+				if (
+					updatedClaimBtnText.toLowerCase() === "claimed" ||
+					updatedClaimBtnText.toLowerCase() === "已認領" ||
+					updatedClaimBtnText.toLowerCase() === "已认领" ||
+					updatedClaimBtnText.toLowerCase() === "申請済み"
+				) {
 					console.log("領取成功");
 					isClaimed = true;
 					continue checkIsClaimed;
