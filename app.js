@@ -326,5 +326,8 @@ async function claimCredit(page) {
 //#endregion
 
 loginAndScrape(url, username, password, isDocker, headless)
-	.then(() => console.log("領取完畢"))
+	.then(() => {
+		console.log("領取完畢");
+		process.exit(0);
+	})
 	.catch((error) => console.error("異常：", error));
