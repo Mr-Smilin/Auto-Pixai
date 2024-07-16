@@ -64,10 +64,10 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 		// await page.waitForSelector('div[id="root"] > div > div > button');
 		// await page.click('div[id="root"] > div > div > button');
 		await page.waitForSelector(
-			'div[id="root"] > div > div > div > div > form > div > div button:last-of-type'
+			'div[id="root"] > div > div > div > div > div form > div > div button:last-of-type'
 		);
 		await page.click(
-			'div[id="root"] > div > div > div > div > form > div > div button:last-of-type'
+			'div[id="root"] > div > div > div > div > div form > div > div button:last-of-type'
 		);
 	} catch (error) {
 		console.error("點擊取消初始畫面失敗:", error);
