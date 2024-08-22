@@ -204,7 +204,7 @@ async function selectProfileButton(page) {
 			try {
 				// 檢查個人資料頭像並點擊
 				console.log("點擊圖片頭像");
-				await page.$eval("header > img", (el) => el.click());
+				await page.$eval("header > span:last-child > img", (el) => el.click());
 				console.log("成功");
 				await delay(300);
 				break;
@@ -212,7 +212,9 @@ async function selectProfileButton(page) {
 				try {
 					// 如果沒有頭像的話會是div
 					console.log("點擊文字頭像");
-					await page.$eval("header > div", (el) => el.click());
+					await page.$eval("header > span:last-child > div", (el) =>
+						el.click()
+					);
 					console.log("成功");
 					await delay(300);
 					break;
