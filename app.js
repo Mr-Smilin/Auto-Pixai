@@ -92,42 +92,55 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 		}
 	}
 
-	try {
-		console.log("展開使用者列表");
-		await selectProfileButton(page);
-	} catch (error) {
-		console.error("展開使用者列表失敗:", error);
-		tryCount++;
-		if (tryCount <= tryCountMax) {
-			return await loginAndScrape(url, username, password, isDocker, headless);
-		} else {
-			throw new Error("重試展開使用者列表失敗");
-		}
-	}
+	// try {
+	// 	console.log("展開使用者列表");
+	// 	await selectProfileButton(page);
+	// } catch (error) {
+	// 	console.error("展開使用者列表失敗:", error);
+	// 	tryCount++;
+	// 	if (tryCount <= tryCountMax) {
+	// 		return await loginAndScrape(url, username, password, isDocker, headless);
+	// 	} else {
+	// 		throw new Error("重試展開使用者列表失敗");
+	// 	}
+	// }
+
+	// try {
+	// 	console.log("點擊檔案列表");
+	// 	await clickProfile(page);
+	// } catch (error) {
+	// 	console.error("點擊檔案列表失敗:", error);
+	// 	tryCount++;
+	// 	if (tryCount <= tryCountMax) {
+	// 		return await loginAndScrape(url, username, password, isDocker, headless);
+	// 	} else {
+	// 		throw new Error("重試點擊檔案列表失敗");
+	// 	}
+	// }
+
+	// try {
+	// 	console.log("領取每日獎勵");
+	// 	await claimCredit(page);
+	// } catch (error) {
+	// 	console.error("領取每日獎勵失敗:", error);
+	// 	tryCount++;
+	// 	if (tryCount <= tryCountMax) {
+	// 		return await loginAndScrape(url, username, password, isDocker, headless);
+	// 	} else {
+	// 		throw new Error("重試領取每日獎勵失敗");
+	// 	}
+	// }
 
 	try {
-		console.log("點擊檔案列表");
-		await clickProfile(page);
+		console.log("直接從彈出視窗領取每日獎勵");
+		await claimCreditFromPop(page);
 	} catch (error) {
-		console.error("點擊檔案列表失敗:", error);
+		console.error("彈出視窗領取每日獎勵失敗:", error);
 		tryCount++;
 		if (tryCount <= tryCountMax) {
 			return await loginAndScrape(url, username, password, isDocker, headless);
 		} else {
-			throw new Error("重試點擊檔案列表失敗");
-		}
-	}
-
-	try {
-		console.log("領取每日獎勵");
-		await claimCredit(page);
-	} catch (error) {
-		console.error("領取每日獎勵失敗:", error);
-		tryCount++;
-		if (tryCount <= tryCountMax) {
-			return await loginAndScrape(url, username, password, isDocker, headless);
-		} else {
-			throw new Error("重試領取每日獎勵失敗");
+			throw new Error("彈出視窗領取每日獎勵失敗");
 		}
 	}
 
@@ -305,6 +318,56 @@ async function claimCredit(page) {
 					updatedClaimBtnText.toLowerCase() === "已認領" ||
 					updatedClaimBtnText.toLowerCase() === "已认领" ||
 					updatedClaimBtnText.toLowerCase() === "申請済み"
+				) {
+					console.log("領取成功");
+					isClaimed = true;
+					continue checkIsClaimed;
+				}
+			}
+		} catch {
+			if (!(await checkPopup(page))) {
+				await delay(500);
+				if (!isClaimed) {
+					continue checkIsClaimed;
+				} else {
+					console.log("已領取獎勵");
+					break;
+				}
+			}
+			continue checkIsClaimed;
+		}
+	}
+}
+//#endregion
+
+//#region 彈出視窗領取每日獎勵
+async function claimCreditFromPop(page) {
+	await page.waitForSelector("section > div > div > button");
+	let isClaimed = false;
+	checkIsClaimed: while (true) {
+		try {
+			if (isClaimed) {
+				break;
+			}
+			while (true) {
+				// 領取！
+				await page.click("section > div > div > button");
+				await delay(300);
+				await page.reload();
+				await delay(5000);
+				const updatedClaimBtnText = await page.$eval(
+					"section > div > div > div > button > span:nth-of-type(2) > div > span:nth-of-type(1)",
+					(el) => el.innerText
+				);
+
+				await delay(300);
+
+				// 確認是不是 "close"
+				if (
+					updatedClaimBtnText.toLowerCase() === "close" ||
+					updatedClaimBtnText.toLowerCase() === "關閉" ||
+					updatedClaimBtnText.toLowerCase() === "关闭" ||
+					updatedClaimBtnText.toLowerCase() === "閉鎖"
 				) {
 					console.log("領取成功");
 					isClaimed = true;
