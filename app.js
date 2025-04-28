@@ -356,7 +356,7 @@ async function claimCreditFromPop(page) {
 				await page.reload();
 				await delay(5000);
 				const updatedClaimBtnText = await page.$eval(
-					"section > div > div > div > button > span:nth-of-type(2) > div > span:nth-of-type(1)",
+					"section > div > div > button > span:nth-of-type(2)",
 					(el) => el.innerText
 				);
 
@@ -364,10 +364,10 @@ async function claimCreditFromPop(page) {
 
 				// 確認是不是 "close"
 				if (
-					updatedClaimBtnText.toLowerCase() === "close" ||
-					updatedClaimBtnText.toLowerCase() === "關閉" ||
-					updatedClaimBtnText.toLowerCase() === "关闭" ||
-					updatedClaimBtnText.toLowerCase() === "閉鎖"
+					updatedClaimBtnText.toLowerCase().includes("close") ||
+					updatedClaimBtnText.toLowerCase().includes("關閉") ||
+					updatedClaimBtnText.toLowerCase().includes("关闭") ||
+					updatedClaimBtnText.toLowerCase().includes("閉鎖")
 				) {
 					console.log("領取成功");
 					isClaimed = true;
