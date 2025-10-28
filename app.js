@@ -6,7 +6,7 @@ const password = process.env.PASSWORD ? process.env.PASSWORD : undefined;
 // 如果需要在本地運行，請將這裡改成 false
 const isDocker = true;
 // 如果需要背景執行，請將 headless 設置為 true
-const headless = true;
+const headless = false;
 // 重試次數上限
 const tryCountMax = 3;
 // 重試次數
