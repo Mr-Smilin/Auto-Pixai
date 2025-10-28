@@ -39,6 +39,13 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 				"--no-zygote",
 			],
 		};
+
+		if (!headless) {
+			config.args.push(
+				"--disable-dev-shm-usage",
+				"--disable-software-rasterizer"
+			);
+		}
 	}
 
 	// 使用 Puppeteer 進行模擬瀏覽器操作
