@@ -1,4 +1,6 @@
-const puppeteer = require("puppeteer");
+const puppeteer = require("puppeteer-extra");
+const StealthPlugin = require("puppeteer-extra-plugin-stealth");
+puppeteer.use(StealthPlugin());
 const url = "https://pixai.art/login";
 // 因為 window 的 USERNAME 撞名
 const username = process.env.LOGINNAME ? process.env.LOGINNAME : undefined;
@@ -45,6 +47,13 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 	const browser = await puppeteer.launch(config); //
 
 	const page = await browser.newPage();
+
+	// 修改 UA，模擬真實瀏覽器
+	await page.setUserAgent(
+		"Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+			"AppleWebKit/537.36 (KHTML, like Gecko) " +
+			"Chrome/120.0.0.0 Safari/537.36"
+	);
 
 	try {
 		await page.goto(url);

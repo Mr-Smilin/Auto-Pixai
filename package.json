@@ -1,6 +1,6 @@
 {
   "name": "auto-pixai",
-  "version": "1.5.5",
+  "version": "1.6.0",
   "description": "自動領取pixai.art獎勵",
   "main": "app.js",
   "scripts": {
@@ -9,6 +9,8 @@
   "author": "Mr-Smilin",
   "license": "ISC",
   "dependencies": {
-    "puppeteer": "^22.6.3"
+    "puppeteer": "^22.6.3",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2"
   }
 }
