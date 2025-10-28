@@ -37,14 +37,21 @@ async function loginAndScrape(url, username, password, isDocker, headless) {
 				"--disable-setuid-sandbox",
 				"--no-sandbox",
 				"--no-zygote",
+				"--disable-dev-shm-usage",
 			],
 		};
 
 		if (!headless) {
 			config.args.push(
-				"--disable-dev-shm-usage",
-				"--disable-software-rasterizer"
+				"--disable-software-rasterizer",
+				"--use-gl=swiftshader",
+				"--disable-extensions"
 			);
+
+			if (!process.env.DISPLAY) {
+				console.warn("WARNING: DISPLAY not set, setting to :99");
+				process.env.DISPLAY = ":99";
+			}
 		}
 	}
 
